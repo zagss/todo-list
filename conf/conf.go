@@ -18,12 +18,12 @@ func init() {
 		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
 	}
 
-	LoadServer()
+	LoadBase()
 	LoadMysql()
 	LoadRedis()
 }
 
-func LoadServer() {
+func LoadBase() {
 	RunMode = Cfg.Section("").Key("RUN_MODE").String()
 	HttpPort = Cfg.Section("server").Key("HttpPort").String()
 }

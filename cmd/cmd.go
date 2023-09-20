@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/zagss/todo-list/conf"
-	_ "github.com/zagss/todo-list/conf"
 	"github.com/zagss/todo-list/router"
 )
 
