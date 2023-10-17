@@ -5,33 +5,47 @@ import (
 	"log"
 )
 
-var (
-	Cfg      *ini.File
+type Server struct {
 	RunMode  string
 	HttpPort string
-)
+}
 
-func init() {
+var ServerSetting = &Server{}
+
+type Database struct {
+	Type     string
+	User     string
+	Password string
+	Host     string
+	Name     string
+}
+
+var DatabaseSetting = &Database{}
+
+type Redis struct {
+	Host     string
+	Password string
+}
+
+var RedisSetting = &Redis{}
+
+var cfg *ini.File
+
+func Setup() {
 	var err error
-	Cfg, err = ini.Load("conf/app.ini")
+	cfg, err = ini.Load("conf/app.ini")
 	if err != nil {
-		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
+		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
 	}
 
-	LoadBase()
-	LoadMysql()
-	LoadRedis()
+	mapTo("server", ServerSetting)
+	mapTo("database", DatabaseSetting)
+	mapTo("redis", RedisSetting)
 }
 
-func LoadBase() {
-	RunMode = Cfg.Section("").Key("RUN_MODE").String()
-	HttpPort = Cfg.Section("server").Key("HttpPort").String()
-}
-
-func LoadMysql() {
-
-}
-
-func LoadRedis() {
-
+func mapTo(section string, v interface{}) {
+	err := cfg.Section(section).MapTo(v)
+	if err != nil {
+		log.Fatalf("Cfg.MapTo %s err: %v", section, err)
+	}
 }
